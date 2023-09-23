@@ -742,8 +742,13 @@ pmt_t deserialize(std::streambuf& sb)
 
         default:
             throw exception("pmt::deserialize: malformed input stream, tag value = ",
-                            from_long(tag));
+                            from_long(tag), ", utag value = ", from_long(utag));
         }
+    }
+
+    case PST_PY_STR: {
+        // Chances are the user is trying to deserialize a Python string, rather than bytes
+        throw exception("pmt::deserialize: malformed input stream, is this a Python 'str' instead of 'bytes'?");
     }
 
     case PST_COMMENT:
