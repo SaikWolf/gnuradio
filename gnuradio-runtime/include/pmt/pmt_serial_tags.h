@@ -42,6 +42,7 @@ enum pst_tags {
     UVI_C32 = 0x0a,
     UVI_C64 = 0x0b,
     PST_COMMENT = 0x3b,
-    PST_COMMENT_END = 0x0a
+    PST_COMMENT_END = 0x0a,
+    PST_PY_STR = 0xc2
 };
 #endif /* INCLUDED_PMT_SERIAL_TAGS_H */
