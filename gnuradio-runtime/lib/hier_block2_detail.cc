@@ -513,21 +513,21 @@ void hier_block2_detail::cleanup_all(std::string caller)
 {
     d_debug_logger->debug("Cleanup all...");
     std::vector<basic_block_vector_t> paths = d_fg->partition();
-    std::cout << "This hier has " << paths.size() << " paths (caller: " << caller << ")\n";
+    // std::cout << "This hier has " << paths.size() << " paths (caller: " << caller << ")\n";
     for(std::vector<basic_block_vector_t>::iterator p = paths.begin(); p != paths.end(); p++){
-        std::cout << "\tthis path has " << (*p).size() << " blocks in it\n";
+        // std::cout << "\tthis path has " << (*p).size() << " blocks in it\n";
         for(basic_block_viter_t bp = (*p).begin(); bp != (*p).end(); bp++){
             if (this->d_owner->identifier() != caller){
-                std::cout << "\t\tblock: " << (*bp)->identifier() << std::endl;
+                // std::cout << "\t\tblock: " << (*bp)->identifier() << std::endl;
                 hier_block2_sptr hh = std::dynamic_pointer_cast<hier_block2>((*bp));
                 if (hh != 0) {
-                    std::cout <<"\t\t |- and is a hier block\n";
-                    std::cout <<"------------------------------------------------------------\n";
+                    // std::cout <<"\t\t |- and is a hier block\n";
+                    // std::cout <<"------------------------------------------------------------\n";
                     hh->d_detail->cleanup_all(hh->identifier());
-                    std::cout <<"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+                    // std::cout <<"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
                 }
-            } else {
-                std::cout << "\t\tpath is just the hier itself\n";
+            // } else {
+            //     std::cout << "\t\tpath is just the hier itself\n";
             }
         }
     }
