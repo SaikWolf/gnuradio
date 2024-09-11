@@ -7,6 +7,112 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.11.0] - 2024-07-24
+
+### Changed
+
+#### Project
+- Const (keyword) cleanup in a large number of files. QtGUI code uses const in many more places.
+
+#### Runtime
+- Add `persistent()` function to gr paths module. This function returns either the value of the `XDG_CACHE_HOME` environment variable, or `appdata()/.local/state`.
+
+#### GRC
+- Work continues on the Qt version of GRC (`gnuradio-companion --qt`). While the Gtk version is still the default, we're getting close to the point where the Qt version can be the default.
+- Generated Python code now includes a startup event (`flowgraph_started`) to the top level class. This was added specifically to avoid a race in the Variable Function Probe block, and may be useful elsewhere.
+- Struct variables have not been usable since around v3.8. Fixed!
+- Paths are now based on gr paths, where they were previous hardcoded to the user's home directory.
+- C++ hier block code paths fixed (so hier blocks work again).
+- Block connection line shape and width are now preferences.
+
+#### gr-blocks
+- New Burst To Stream block transforms a bursty tagged stream into a continuous stream by inserting zeros in the output between input packets whenever no packets are available at the input.
+
+#### gr-digital
+- FLL Band Edge power calculations fixed, along with thread safety issues.
+
+#### gr-fec
+- Unused RS code removed - unlikely anyone will notice.
+
+#### gr-filter
+- Numpy `float_` changed to `float64` for Numpy 2.0 compatibility.
+
+#### gr-fft
+- Vector version of FFT `fft_v` library function (calls fftw) thread safety improved.
+
+#### gr-uhd
+- Do not require PyQt5 for non-graphical configurations.
+
+#### modtool
+- Many bug fixes and cleanups, resulting in more reliable operation. That sounds really good, right?
+- Remove dependency on the "click" package.
+- Appending new blocks to CMake files respects closing parens.
+
+#### Build system and packaging
+- CMake minimum versions were out of sync in different places - fixed.
+- Incorrect Qwt maximum version removed.
+- Conda re-rendered.
+
+#### Testing
+- Add Ubuntu 24.04 LTS to CI
+- Remove Fedora 38 from CI
+- Conda: build with VS2022 for Windows
+
+## [3.10.10.0] - 2024-04-06
+
+### Changed
+
+#### Runtime
+
+- Modernize location of config files. `XDG_CONFIG_HOME` will be used if set
+(often `$HOME/.config`). This change attempts to be backward compatible with
+existing config file locations, but be aware that config files may show up
+in the old (`$HOME/.gnuradio/`) and new (`$XDG_CONFIG_HOME/gnuradio`)
+locations depending on GNU Radio version. Files are not automatically moved,
+since some users run multiple versions of GNU Radio.
+- Ctrlport Probe, Ctrlport Probe PSD and gr-ctrlport-monitor. Ctrlport Monitor blocks
+are still broken.
+
+#### GRC
+
+- NEW Qt-based front end! Run `gnuradio-companion --qt` to try it out. This feature is
+still in testing, so the Gtk front end runs by default. In a future release, Qt will
+become the default, removing Gtk as a manditory dependency. Maintenance will focus on
+the Qt front end at that point.
+- Restore property field background colors (as a View option, off by default) for the Gtk
+front end. Background colors were previously replaced with textual type string.
+- The canvas can be panned using the middle mouse button
+- C++ code generation improvements related to parameters and strings
+- C++ code generation fixed for Add Const
+
+#### gr-audio
+
+- Added 96 kHz and 192 kHz selections to ALSA source/sink
+
+#### gr-blocks
+
+- Float To UChar block adds vector support, and also scale and bias params
+
+#### gr-digital
+
+- Additive Scrambler adds soft symbol handling
+
+#### modtool
+
+- Improvements to handling of Python blocks (add, rm, and rename work reliably)
+- New parseable manifest format (yaml instead of md) to better support the OOT ecosystem
+- Manifest and examples are installed by "make install"
+
+#### Build system and packaging
+
+- Python byte-compiled (pyc) files are no longer installed, as they are
+deprecated by Python
+
+#### Testing
+
+- Added MinGW test runner and fixed various MinGW compilation failures
+- Update Fedora to test 38, 39 and 40
+
 ## [3.10.9.0] - 2023-12-24
 
 ### Changed

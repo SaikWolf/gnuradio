@@ -41,6 +41,8 @@ public:
     void unregister_primitive(std::string blk);
     void notify_blk(std::string blk);
 
+    void print_ownership(int item);
+
 private:
     // typedef std::map< long, basic_block_sptr >   blocksubmap_t;
     typedef std::map<long, basic_block*> blocksubmap_t;
@@ -55,5 +57,7 @@ private:
 } /* namespace gr */
 
 GR_RUNTIME_API extern gr::block_registry global_block_registry;
+
+void GR_RUNTIME_API print_global_ownership(int item);
 
 #endif /* GR_RUNTIME_BLOCK_REGISTRY_H */

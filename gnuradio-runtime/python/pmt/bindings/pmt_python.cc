@@ -1401,19 +1401,6 @@ void bind_pmt(py::module& m)
 
     m.def("is_any", &::pmt::is_any, py::arg("obj").none(false), D(is_any));
 
-
-    m.def("make_any", &::pmt::make_any, py::arg("any"), D(make_any));
-
-
-    m.def("any_ref", &::pmt::any_ref, py::arg("obj").none(false), D(any_ref));
-
-
-    m.def("any_set",
-          &::pmt::any_set,
-          py::arg("obj").none(false),
-          py::arg("any"),
-          D(any_set));
-
     // m.def("is_msg_accepter",&pmt::is_msg_accepter,
     //     py::arg("obj")
     // );
@@ -1458,9 +1445,6 @@ void bind_pmt(py::module& m)
           py::arg("obj").none(false),
           py::arg("alist").none(false),
           D(assoc));
-
-
-    m.def("map", &::pmt::map, py::arg("proc"), py::arg("list").none(false), D(map));
 
 
     m.def("reverse", &::pmt::reverse, py::arg("list").none(false), D(reverse));
@@ -1586,12 +1570,6 @@ void bind_pmt(py::module& m)
           D(is_eof_object));
 
 
-    m.def("read", &::pmt::read, py::arg("port"), D(read));
-
-
-    m.def("write", &::pmt::write, py::arg("obj").none(false), py::arg("port"), D(write));
-
-
     m.def("write_string",
           &::pmt::write_string,
           py::arg("obj").none(false),
@@ -1599,17 +1577,6 @@ void bind_pmt(py::module& m)
 
 
     m.def("print", &::pmt::print, py::arg("v").none(false), D(print));
-
-
-    m.def("serialize",
-          &::pmt::serialize,
-          py::arg("obj").none(false),
-          py::arg("sink"),
-          D(serialize));
-
-
-    m.def("deserialize", &::pmt::deserialize, py::arg("source"), D(deserialize));
-
 
     m.def("dump_sizeof", &::pmt::dump_sizeof, D(dump_sizeof));
 

@@ -24,6 +24,7 @@
 namespace py = pybind11;
 
 #include <gnuradio/basic_block.h>
+#include <gnuradio/block_registry.h>
 // pydoc.h is automatically generated in the build directory
 #include <basic_block_pydoc.h>
 
@@ -274,6 +275,11 @@ void bind_basic_block(py::module& m)
     m.def("basic_block_ncurrently_allocated",
           &::gr::basic_block_ncurrently_allocated,
           D(basic_block_ncurrently_allocated));
+
+
+    m.def("print_registry_ownership",
+          &::print_global_ownership,
+          py::arg("item"));
 
 
     py::module m_messages = m.def_submodule("messages");

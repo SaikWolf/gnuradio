@@ -117,7 +117,7 @@ class test_pmt(unittest.TestCase):
         self.assertEqual(const, pmt.to_long(deser))
 
     def test15(self):
-        if(self.sizeof_long <= 4):
+        if (self.sizeof_long <= 4):
             return
         const = self.MAXINT32 + 1
         x_pmt = pmt.from_long(const)
@@ -144,7 +144,7 @@ class test_pmt(unittest.TestCase):
         self.assertEqual(const, x_long)
 
     def test18(self):
-        if(self.sizeof_long <= 4):
+        if (self.sizeof_long <= 4):
             return
         const = self.MININT32 - 1
         x_pmt = pmt.from_long(const)
@@ -797,12 +797,6 @@ class test_pmt(unittest.TestCase):
             pmt.is_any(None)
 
         with self.assertRaises(TypeError):
-            pmt.any_ref(None)
-
-        with self.assertRaises(TypeError):
-            pmt.any_set(None, None)
-
-        with self.assertRaises(TypeError):
             pmt.is_pdu(None)
 
         with self.assertRaises(TypeError):
@@ -840,9 +834,6 @@ class test_pmt(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             pmt.assoc(pmt.PMT_NIL, None)
-
-        with self.assertRaises(TypeError):
-            pmt.map(None, None)
 
         with self.assertRaises(TypeError):
             pmt.reverse(None)
@@ -918,16 +909,10 @@ class test_pmt(unittest.TestCase):
             pmt.is_eof_object(None)
 
         with self.assertRaises(TypeError):
-            pmt.write(None, None)
-
-        with self.assertRaises(TypeError):
             pmt.write_string(None)
 
         with self.assertRaises(TypeError):
             pmt.print(None)
-
-        with self.assertRaises(TypeError):
-            pmt.serialize(None, None)
 
         with self.assertRaises(TypeError):
             pmt.length(None)

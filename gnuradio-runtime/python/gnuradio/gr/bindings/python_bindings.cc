@@ -59,19 +59,6 @@ void bind_prefs(py::module&);
 // void bind_pycallback_object(py::module&);
 void bind_random(py::module&);
 void bind_realtime(py::module&);
-// void bind_rpcbufferedget(py::module&);
-// void bind_rpccallbackregister_base(py::module&);
-// void bind_rpcmanager(py::module&);
-// void bind_rpcmanager_base(py::module&);
-// void bind_rpcpmtconverters_thrift(py::module&);
-// void bind_rpcregisterhelpers(py::module&);
-// void bind_rpcserver_aggregator(py::module&);
-// void bind_rpcserver_base(py::module&);
-// void bind_rpcserver_booter_aggregator(py::module&);
-// void bind_rpcserver_booter_base(py::module&);
-// void bind_rpcserver_booter_thrift(py::module&);
-// void bind_rpcserver_selector(py::module&);
-// void bind_rpcserver_thrift(py::module&);
 void bind_runtime_types(py::module&);
 void bind_sincos(py::module&);
 void bind_sptr_magic(py::module&);
@@ -84,13 +71,29 @@ void bind_tags(py::module&);
 // void bind_thread(py::module&);
 // void bind_thread_body_wrapper(py::module&);
 // void bind_thread_group(py::module&);
-// void bind_thrift_application_base(py::module&);
-// void bind_thrift_server_template(py::module&);
 void bind_top_block(py::module&);
 void bind_tpb_detail(py::module&);
 // void bind_types(py::module&);
 // void bind_unittests(py::module&);
 // void bind_xoroshiro128p(py::module&);
+//
+#ifdef GR_HAVE_CTRLPORT
+// void bind_rpcbufferedget(py::module&);
+void bind_rpccallbackregister_base(py::module&);
+void bind_rpcmanager(py::module&);
+// void bind_rpcmanager_base(py::module&);
+// void bind_rpcpmtconverters_thrift(py::module&);
+// void bind_rpcregisterhelpers(py::module&);
+// void bind_rpcserver_aggregator(py::module&);
+// void bind_rpcserver_base(py::module&);
+// void bind_rpcserver_booter_aggregator(py::module&);
+void bind_rpcserver_booter_base(py::module&);
+// void bind_rpcserver_booter_thrift(py::module&);
+// void bind_rpcserver_selector(py::module&);
+// void bind_rpcserver_thrift(py::module&);
+// void bind_thrift_application_base(py::module&);
+// void bind_thrift_server_template(py::module&);
+#endif
 
 // We need this hack because import_array() returns NULL
 // for newer Python versions.
@@ -161,19 +164,21 @@ PYBIND11_MODULE(gr_python, m)
     // // bind_pycallback_object(m);
     bind_random(m);
     bind_realtime(m);
+#ifdef GR_HAVE_CTRLPORT
     // // bind_rpcbufferedget(m);
-    // // bind_rpccallbackregister_base(m);
-    // // bind_rpcmanager(m);
+    bind_rpccallbackregister_base(m);
+    bind_rpcmanager(m);
     // // bind_rpcmanager_base(m);
     // // bind_rpcpmtconverters_thrift(m);
     // // bind_rpcregisterhelpers(m);
     // // bind_rpcserver_aggregator(m);
     // // bind_rpcserver_base(m);
     // // bind_rpcserver_booter_aggregator(m);
-    // // bind_rpcserver_booter_base(m);
+    bind_rpcserver_booter_base(m);
     // // bind_rpcserver_booter_thrift(m);
     // // bind_rpcserver_selector(m);
     // // bind_rpcserver_thrift(m);
+#endif
     bind_runtime_types(m);
     bind_sincos(m);
     bind_sptr_magic(m);
