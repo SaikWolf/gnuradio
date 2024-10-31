@@ -28,3 +28,6 @@ static const char* __doc_gr_zeromq_pull_msg_source_make = R"doc()doc";
 
 
 static const char* __doc_gr_zeromq_pull_msg_source_last_endpoint = R"doc()doc";
+
+
+static const char* __doc_gr_zeromq_pull_msg_source_teardown = R"doc()doc";

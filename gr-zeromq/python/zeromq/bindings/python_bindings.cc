@@ -25,6 +25,7 @@ void bind_rep_msg_sink(py::module&);
 void bind_rep_sink(py::module&);
 void bind_req_msg_source(py::module&);
 void bind_req_source(py::module&);
+void bind_router_msg_sink(py::module&);
 void bind_sub_msg_source(py::module&);
 void bind_sub_source(py::module&);
 
@@ -57,6 +58,7 @@ PYBIND11_MODULE(zeromq_python, m)
     bind_rep_sink(m);
     bind_req_msg_source(m);
     bind_req_source(m);
+    bind_router_msg_sink(m);
     bind_sub_msg_source(m);
     bind_sub_source(m);
 }

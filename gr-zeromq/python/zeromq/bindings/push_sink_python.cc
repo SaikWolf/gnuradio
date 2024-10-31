@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(push_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(ee6d7190472ad0b669a7a6dd058dcae0)                     */
+/* BINDTOOL_HEADER_FILE_HASH(13d65011ffc3fcb10163472a8f1b8a21)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -46,6 +46,7 @@ void bind_push_sink(py::module& m)
              py::arg("timeout") = 100,
              py::arg("pass_tags") = false,
              py::arg("hwm") = -1,
+             py::arg("linger") = 0,
              py::arg("bind") = true,
              D(push_sink, make))
 

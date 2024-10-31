@@ -29,6 +29,7 @@ public:
                   int hwm,
                   const std::string& key,
                   bool drop_on_hwm,
+                  int linger,
                   bool bind);
 
     int work(int noutput_items,

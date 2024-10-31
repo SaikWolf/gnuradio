@@ -43,6 +43,7 @@ public:
      * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments.
      * \param pass_tags Whether sink will serialize and pass tags over the link.
      * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
+     * \param linger How long should the socket keep open after close if messages available.
      * \param bind If true this block will bind to the address, otherwise it will
      * connect; the default is to bind
      */
@@ -52,6 +53,7 @@ public:
                      int timeout = 100,
                      bool pass_tags = false,
                      int hwm = -1,
+                     int linger = 0,
                      bool bind = true);
 
     /*!

@@ -32,11 +32,13 @@ base_impl::base_impl(int type,
                      int hwm,
                      bool sink,
                      bool bind,
+                     int linger,
                      const std::string& key)
     : d_context(1),
       d_socket(d_context, type),
       d_vsize(itemsize * vlen),
       d_timeout(timeout),
+      d_linger(linger),
       d_pass_tags(pass_tags),
       d_key(key)
 {
@@ -47,12 +49,15 @@ base_impl::base_impl(int type,
     if (major < 3) {
         d_timeout *= 1000;
     }
+    if(d_linger < 0){
+        d_linger = LINGER_DEFAULT;
+    }
 
     /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
 #if USE_NEW_CPPZMQ_SET_GET
-    d_socket.set(zmq::sockopt::linger, LINGER_DEFAULT);
+    d_socket.set(zmq::sockopt::linger, d_linger);
 #else
-    d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
+    d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(d_linger));
 #endif
 
     /* Set high watermark */
@@ -113,8 +118,9 @@ base_sink_impl::base_sink_impl(int type,
                                bool pass_tags,
                                int hwm,
                                bool bind,
+                               int linger,
                                const std::string& key)
-    : base_impl(type, itemsize, vlen, address, timeout, pass_tags, hwm, true, bind, key)
+    : base_impl(type, itemsize, vlen, address, timeout, pass_tags, hwm, true, bind, linger, key)
 {
 }
 
@@ -171,8 +177,9 @@ base_source_impl::base_source_impl(int type,
                                    bool pass_tags,
                                    int hwm,
                                    bool bind,
+                                   int linger,
                                    const std::string& key)
-    : base_impl(type, itemsize, vlen, address, timeout, pass_tags, hwm, false, bind, key),
+    : base_impl(type, itemsize, vlen, address, timeout, pass_tags, hwm, false, bind, linger, key),
       d_consumed_bytes(0),
       d_consumed_items(0)
 {

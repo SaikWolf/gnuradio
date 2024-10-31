@@ -22,19 +22,20 @@
 namespace gr {
 namespace zeromq {
 
-sub_msg_source::sptr sub_msg_source::make(char* address, int timeout, bool bind)
+sub_msg_source::sptr sub_msg_source::make(char* address, int timeout, int linger, bool bind)
 {
-    return gnuradio::make_block_sptr<sub_msg_source_impl>(address, timeout, bind);
+    return gnuradio::make_block_sptr<sub_msg_source_impl>(address, timeout, linger, bind);
 }
 
-sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
+sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, int linger, bool bind)
     : gr::block("sub_msg_source",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_timeout(timeout),
       d_context(1),
       d_socket(d_context, ZMQ_SUB),
-      d_port(pmt::mp("out"))
+      d_port(pmt::mp("out")),
+      d_terminated(0)
 {
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
@@ -42,6 +43,13 @@ sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
     if (major < 3) {
         d_timeout = timeout * 1000;
     }
+
+    int time = linger;
+#if USE_NEW_CPPZMQ_SET_GET
+    d_socket.set(zmq::sockopt::linger, time);
+#else
+    d_socket.setsockopt(ZMQ_LINGER, &time, sizeof(time));
+#endif
 
 #if USE_NEW_CPPZMQ_SET_GET
     d_socket.set(zmq::sockopt::subscribe, "");
@@ -60,13 +68,12 @@ sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
 
 sub_msg_source_impl::~sub_msg_source_impl()
 {
-    d_context.shutdown();
-    d_socket.close();
-    d_context.close();
+    teardown();
 }
 
 bool sub_msg_source_impl::start()
 {
+    if (d_terminated == 1) return true;
     d_finished = false;
     d_thread = std::make_unique<std::thread>([this] { readloop(); });
     return true;
@@ -74,8 +81,11 @@ bool sub_msg_source_impl::start()
 
 bool sub_msg_source_impl::stop()
 {
+    if (d_terminated == 1) return true;
     d_finished = true;
-    d_thread->join();
+    if (d_thread)
+        if (d_thread->joinable())
+            d_thread->join();
     return true;
 }
 
@@ -115,6 +125,17 @@ void sub_msg_source_impl::readloop()
         } else {
             std::this_thread::sleep_for(100us);
         }
+    }
+}
+
+void sub_msg_source_impl::teardown()
+{
+    if (d_terminated == 0){
+        stop();
+        d_context.shutdown();
+        d_socket.close();
+        d_context.close();
+        d_terminated = 1;
     }
 }
 

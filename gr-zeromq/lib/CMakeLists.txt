@@ -23,6 +23,7 @@ add_library(
     rep_msg_sink_impl.cc
     req_source_impl.cc
     req_msg_source_impl.cc
+    router_msg_sink_impl.cc
     tag_headers.cc)
 
 target_link_libraries(

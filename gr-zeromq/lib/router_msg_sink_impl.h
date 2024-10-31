@@ -8,33 +8,39 @@
  *
  */
 
-#ifndef INCLUDED_ZEROMQ_PULL_MSG_SOURCE_IMPL_H
-#define INCLUDED_ZEROMQ_PULL_MSG_SOURCE_IMPL_H
+#ifndef INCLUDED_ZEROMQ_ROUTER_MSG_SINK_IMPL_H
+#define INCLUDED_ZEROMQ_ROUTER_MSG_SINK_IMPL_H
 
 #include "zmq_common_impl.h"
-#include <gnuradio/zeromq/pull_msg_source.h>
+#include <gnuradio/zeromq/router_msg_sink.h>
 #include <thread>
+#include <algorithm>
+#include <vector>
 
 namespace gr {
 namespace zeromq {
 
-class pull_msg_source_impl : public pull_msg_source
+class router_msg_sink_impl : public router_msg_sink
 {
 private:
-    int d_timeout; // microseconds, -1 is blocking
+    int d_timeout;
     zmq::context_t d_context;
     zmq::socket_t d_socket;
     std::unique_ptr<std::thread> d_thread;
+    bool d_bound;
+    bool d_finished;
     const pmt::pmt_t d_port;
     uint8_t d_terminated;
+    std::string d_addr;
+    std::vector<std::string> d_connections;
 
     void readloop();
 
-public:
-    bool d_finished;
+    bool beacon(std::string dest);
 
-    pull_msg_source_impl(char* address, int timeout, int linger, bool bind);
-    ~pull_msg_source_impl() override;
+public:
+    router_msg_sink_impl(char* address, int timeout, int linger, bool bind);
+    ~router_msg_sink_impl() override;
 
     bool start() override;
     bool stop() override;
@@ -56,4 +62,4 @@ public:
 } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_PULL_MSG_SOURCE_IMPL_H */
+#endif /* INCLUDED_ZEROMQ_ROUTER_MSG_SINK_IMPL_H */

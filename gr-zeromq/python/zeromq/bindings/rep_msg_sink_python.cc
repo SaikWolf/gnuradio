@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rep_msg_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(fa5387606b1c51516404877dfbd11038)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6943d3b985b29b8f03ecc06e80527e8b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,12 +39,16 @@ void bind_rep_msg_sink(py::module& m)
         .def(py::init(&rep_msg_sink::make),
              py::arg("address"),
              py::arg("timeout") = 100,
+             py::arg("linger") = 0,
              py::arg("bind") = true,
              D(rep_msg_sink, make))
 
 
         .def(
             "last_endpoint", &rep_msg_sink::last_endpoint, D(rep_msg_sink, last_endpoint))
+
+        .def(
+            "teardown", &rep_msg_sink::teardown, D(rep_msg_sink, teardown))
 
         ;
 }

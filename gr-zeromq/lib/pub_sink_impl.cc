@@ -27,10 +27,11 @@ pub_sink::sptr pub_sink::make(size_t itemsize,
                               int hwm,
                               const std::string& key,
                               bool drop_on_hwm,
+                              int linger,
                               bool bind)
 {
     return gnuradio::make_block_sptr<pub_sink_impl>(
-        itemsize, vlen, address, timeout, pass_tags, hwm, key, drop_on_hwm, bind);
+        itemsize, vlen, address, timeout, pass_tags, hwm, key, drop_on_hwm, linger, bind);
 }
 
 pub_sink_impl::pub_sink_impl(size_t itemsize,
@@ -41,11 +42,12 @@ pub_sink_impl::pub_sink_impl(size_t itemsize,
                              int hwm,
                              const std::string& key,
                              bool drop_on_hwm,
+                             int linger,
                              bool bind)
     : gr::sync_block("pub_sink",
                      gr::io_signature::make(1, 1, itemsize * vlen),
                      gr::io_signature::make(0, 0, 0)),
-      base_sink_impl(ZMQ_PUB, itemsize, vlen, address, timeout, pass_tags, hwm, bind, key)
+      base_sink_impl(ZMQ_PUB, itemsize, vlen, address, timeout, pass_tags, hwm, bind, linger, key)
 {
     /* Socket option to prevent dropping of samples (backpressure) */
     int no_drop = (drop_on_hwm == true) ? 0 : 1;

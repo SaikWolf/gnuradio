@@ -19,18 +19,19 @@
 namespace gr {
 namespace zeromq {
 
-push_msg_sink::sptr push_msg_sink::make(char* address, int timeout, bool bind)
+push_msg_sink::sptr push_msg_sink::make(char* address, int timeout, int linger, bool bind)
 {
-    return gnuradio::make_block_sptr<push_msg_sink_impl>(address, timeout, bind);
+    return gnuradio::make_block_sptr<push_msg_sink_impl>(address, timeout, linger, bind);
 }
 
-push_msg_sink_impl::push_msg_sink_impl(char* address, int timeout, bool bind)
+push_msg_sink_impl::push_msg_sink_impl(char* address, int timeout, int linger, bool bind)
     : gr::block("push_msg_sink",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_timeout(timeout),
       d_context(1),
-      d_socket(d_context, ZMQ_PUSH)
+      d_socket(d_context, ZMQ_PUSH),
+      d_terminated(0)
 {
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
@@ -39,7 +40,7 @@ push_msg_sink_impl::push_msg_sink_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    int time = 0;
+    int time = linger;
 #if USE_NEW_CPPZMQ_SET_GET
     d_socket.set(zmq::sockopt::linger, time);
 #else
@@ -58,13 +59,12 @@ push_msg_sink_impl::push_msg_sink_impl(char* address, int timeout, bool bind)
 
 push_msg_sink_impl::~push_msg_sink_impl()
 {
-    d_context.shutdown();
-    d_socket.close();
-    d_context.close();
+    teardown();
 }
 
 void push_msg_sink_impl::handler(pmt::pmt_t msg)
 {
+    if (d_terminated) return;
     std::stringbuf sb("");
     pmt::serialize(msg, sb);
     std::string s = sb.str();
@@ -76,6 +76,16 @@ void push_msg_sink_impl::handler(pmt::pmt_t msg)
 #else
     d_socket.send(zmsg);
 #endif
+}
+
+void push_msg_sink_impl::teardown()
+{
+    if(d_terminated == 0){
+        d_context.shutdown();
+        d_socket.close();
+        d_context.close();
+        d_terminated = 1;
+    }
 }
 
 } /* namespace zeromq */

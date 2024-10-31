@@ -50,6 +50,7 @@ public:
      * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
      * \param key Prepend a key/topic to the start of each message (default is none)
      * \param drop_on_hwm Optionally drop samples when high watermark is reached.
+     * \param linger How long should the socket keep open after close if messages available.
      * \param bind If true this block will bind to the address, otherwise it will
      * connect; the default is to bind
      */
@@ -61,6 +62,7 @@ public:
                      int hwm = -1,
                      const std::string& key = "",
                      bool drop_on_hwm = true,
+                     int linger = 0,
                      bool bind = true);
 
     /*!

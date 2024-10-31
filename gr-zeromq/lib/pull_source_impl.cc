@@ -25,10 +25,11 @@ pull_source::sptr pull_source::make(size_t itemsize,
                                     int timeout,
                                     bool pass_tags,
                                     int hwm,
+                                    int linger,
                                     bool bind)
 {
     return gnuradio::make_block_sptr<pull_source_impl>(
-        itemsize, vlen, address, timeout, pass_tags, hwm, bind);
+        itemsize, vlen, address, timeout, pass_tags, hwm, linger, bind);
 }
 
 pull_source_impl::pull_source_impl(size_t itemsize,
@@ -37,11 +38,12 @@ pull_source_impl::pull_source_impl(size_t itemsize,
                                    int timeout,
                                    bool pass_tags,
                                    int hwm,
+                                   int linger,
                                    bool bind)
     : gr::sync_block("pull_source",
                      gr::io_signature::make(0, 0, 0),
                      gr::io_signature::make(1, 1, itemsize * vlen)),
-      base_source_impl(ZMQ_PULL, itemsize, vlen, address, timeout, pass_tags, hwm, bind)
+      base_source_impl(ZMQ_PULL, itemsize, vlen, address, timeout, pass_tags, hwm, bind, linger)
 {
     /* All is delegated */
 }

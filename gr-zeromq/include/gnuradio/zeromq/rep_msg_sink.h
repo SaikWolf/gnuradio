@@ -37,16 +37,22 @@ public:
      *
      * \param address  ZMQ socket address specifier
      * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments
+     * \param linger How long should the socket keep open after close if messages available.
      * \param bind     If true this block will bind to the address, otherwise it will
      * connect; the default is to bind
      *
      */
-    static sptr make(char* address, int timeout = 100, bool bind = true);
+    static sptr make(char* address, int timeout = 100, int linger = 0, bool bind = true);
 
     /*!
      * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.
      */
     virtual std::string last_endpoint() = 0;
+
+    /*!
+     * \brief Force zmq cleanup to occur killing the socket.
+     */
+    virtual void teardown() = 0;
 };
 
 } // namespace zeromq

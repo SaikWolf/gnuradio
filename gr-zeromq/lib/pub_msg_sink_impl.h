@@ -24,9 +24,10 @@ private:
     zmq::context_t d_context;
     zmq::socket_t d_socket;
     std::string d_pkt_filter;
+    uint8_t d_terminated;
 
 public:
-    pub_msg_sink_impl(char* address, int timeout, bool bind, std::string pkt_filter);
+    pub_msg_sink_impl(char* address, int timeout, int linger, bool bind, std::string pkt_filter);
     ~pub_msg_sink_impl() override;
 
     void handler(pmt::pmt_t msg);
@@ -41,6 +42,7 @@ public:
         return std::string(addr, addr_len - 1);
 #endif
     }
+    void teardown();
 };
 
 } // namespace zeromq

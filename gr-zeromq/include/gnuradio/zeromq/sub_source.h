@@ -40,6 +40,7 @@ public:
      * \param pass_tags Whether source will look for and deserialize tags.
      * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
      * \param key Subscriber filter key. Leave empty to pass all messages.
+     * \param linger How long should the socket keep open after close if messages available.
      * \param bind If true this block will bind to the address, otherwise it will
      * connect; the default is to connect
      */
@@ -50,6 +51,7 @@ public:
                      bool pass_tags = false,
                      int hwm = -1,
                      const std::string& key = "",
+                     int linger = 0,
                      bool bind = false);
 
     /*!

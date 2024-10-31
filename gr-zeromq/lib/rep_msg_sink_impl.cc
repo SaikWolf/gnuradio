@@ -21,19 +21,20 @@
 namespace gr {
 namespace zeromq {
 
-rep_msg_sink::sptr rep_msg_sink::make(char* address, int timeout, bool bind)
+rep_msg_sink::sptr rep_msg_sink::make(char* address, int timeout, int linger, bool bind)
 {
-    return gnuradio::make_block_sptr<rep_msg_sink_impl>(address, timeout, bind);
+    return gnuradio::make_block_sptr<rep_msg_sink_impl>(address, timeout, linger, bind);
 }
 
-rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
+rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, int linger, bool bind)
     : gr::block("rep_msg_sink",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_timeout(timeout),
       d_context(1),
       d_socket(d_context, ZMQ_REP),
-      d_port(pmt::mp("in"))
+      d_port(pmt::mp("in")),
+      d_terminated(0)
 {
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
@@ -42,7 +43,7 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    int time = 0;
+    int time = linger;
 #if USE_NEW_CPPZMQ_SET_GET
     d_socket.set(zmq::sockopt::linger, time);
 #else
@@ -60,13 +61,12 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
 
 rep_msg_sink_impl::~rep_msg_sink_impl()
 {
-    d_context.shutdown();
-    d_socket.close();
-    d_context.close();
+    teardown();
 }
 
 bool rep_msg_sink_impl::start()
 {
+    if (d_terminated == 1) return true;
     d_finished = false;
     d_thread = std::make_unique<std::thread>([this] { readloop(); });
     return true;
@@ -74,8 +74,11 @@ bool rep_msg_sink_impl::start()
 
 bool rep_msg_sink_impl::stop()
 {
+    if (d_terminated == 1) return true;
     d_finished = true;
-    d_thread->join();
+    if (d_thread)
+        if (d_thread->joinable())
+            d_thread->join();
     return true;
 }
 
@@ -129,6 +132,17 @@ void rep_msg_sink_impl::readloop()
         }     // while !empty
 
     } // while !d_finished
+}
+
+void rep_msg_sink_impl::teardown()
+{
+    if(d_terminated == 0){
+        stop();
+        d_context.shutdown();
+        d_socket.close();
+        d_context.close();
+        d_terminated = 1;
+    }
 }
 
 } /* namespace zeromq */
