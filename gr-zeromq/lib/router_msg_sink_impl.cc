@@ -56,7 +56,7 @@ router_msg_sink_impl::router_msg_sink_impl(char* address, int timeout, int linge
     if (bind) {
         std::string ident(address);
 #if USE_NEW_CPPZMQ_SET_GET
-        d_socket.set(zmq::sockopt::identiy, ident.c_str(), ident.size());
+        d_socket.set(zmq::sockopt::routing_id, ident);
 #else
         d_socket.setsockopt(ZMQ_IDENTITY, ident.c_str(), ident.size());
 #endif
