@@ -26,13 +26,14 @@ private:
     zmq::socket_t d_socket;
     std::unique_ptr<std::thread> d_thread;
     bool d_finished;
-
     const pmt::pmt_t d_port;
+    uint8_t d_terminated;
+
 
     void readloop();
 
 public:
-    rep_msg_sink_impl(char* address, int timeout, bool bind);
+    rep_msg_sink_impl(char* address, int timeout, int linger, bool bind);
     ~rep_msg_sink_impl() override;
 
     bool start() override;
@@ -49,6 +50,7 @@ public:
         return std::string(addr, addr_len - 1);
 #endif
     }
+    void teardown();
 };
 
 } // namespace zeromq

@@ -103,6 +103,12 @@ void flowgraph::clear()
     d_edges.clear();
 }
 
+void flowgraph::clear_msg()
+{
+    // Boost shared pointers will deallocate as needed
+    d_msg_edges.clear();
+}
+
 void flowgraph::check_valid_port(gr::io_signature::sptr sig, int port)
 {
     std::stringstream msg;

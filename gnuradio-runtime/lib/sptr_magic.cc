@@ -81,4 +81,13 @@ gr::basic_block_sptr detail::sptr_magic::fetch_initial_sptr(gr::basic_block* p)
     s_map.erase(pos);
     return sptr;
 }
+
+void detail::sptr_magic::print_ownership(){
+    std::cout << "Hey Printing all of the block pairs being tracked now: " << s_map.size() << "\n";
+    gr::thread::scoped_lock guard(s_mutex);
+    for(auto const& pair : s_map){
+        std::cout << pair.first << " : " << pair.second << std::endl;
+    }
+}
+
 } // namespace gnuradio

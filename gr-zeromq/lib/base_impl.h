@@ -29,6 +29,7 @@ public:
               int hwm,   // high watermark
               bool sink, // is sink, else source
               bool bind, // do bind, else connect
+              int linger = 0,
               const std::string& key = "");
     ~base_impl() override;
 
@@ -38,6 +39,7 @@ protected:
     zmq::socket_t d_socket;
     size_t d_vsize;
     int d_timeout;
+    int d_linger;
     bool d_pass_tags;
     const std::string d_key;
 };
@@ -53,6 +55,7 @@ public:
                    bool pass_tags,
                    int hwm,
                    bool bind,
+                   int linger = 0,
                    const std::string& key = "");
 
 protected:
@@ -70,6 +73,7 @@ public:
                      bool pass_tags,
                      int hwm,
                      bool bind,
+                     int linger = 0,
                      const std::string& key = "");
 
 protected:

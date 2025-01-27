@@ -19,18 +19,20 @@
 namespace gr {
 namespace zeromq {
 
-pub_msg_sink::sptr pub_msg_sink::make(char* address, int timeout, bool bind)
+pub_msg_sink::sptr pub_msg_sink::make(char* address, int timeout, int linger, bool bind, std::string pkt_filter)
 {
-    return gnuradio::make_block_sptr<pub_msg_sink_impl>(address, timeout, bind);
+    return gnuradio::make_block_sptr<pub_msg_sink_impl>(address, timeout, linger, bind, pkt_filter);
 }
 
-pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
+pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, int linger, bool bind, std::string pkt_filter)
     : gr::block("pub_msg_sink",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_timeout(timeout),
       d_context(1),
-      d_socket(d_context, ZMQ_PUB)
+      d_socket(d_context, ZMQ_PUB),
+      d_pkt_filter(pkt_filter),
+      d_terminated(0)
 {
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
@@ -39,7 +41,7 @@ pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    int time = 0;
+    int time = linger;
 #if USE_NEW_CPPZMQ_SET_GET
     d_socket.set(zmq::sockopt::linger, time);
 #else
@@ -57,24 +59,36 @@ pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
 
 pub_msg_sink_impl::~pub_msg_sink_impl()
 {
-    d_context.shutdown();
-    d_socket.close();
-    d_context.close();
+    teardown();
 }
 
 void pub_msg_sink_impl::handler(pmt::pmt_t msg)
 {
+    if (d_terminated) return;
     std::stringbuf sb("");
     pmt::serialize(msg, sb);
     std::string s = sb.str();
     zmq::message_t zmsg(s.size());
+    zmq::message_t pub_filter(d_pkt_filter.size());
 
     memcpy(zmsg.data(), s.c_str(), s.size());
+    memcpy(pub_filter.data(), d_pkt_filter.c_str(), d_pkt_filter.size());
 #if USE_NEW_CPPZMQ_SEND_RECV
-    d_socket.send(zmsg, zmq::send_flags::none);
+    while(!d_socket.send(pub_filter, zmq::send_flags::sndmore));
+    while(!d_socket.send(zmsg, zmq::send_flags::none));
 #else
-    d_socket.send(zmsg);
+    while(!d_socket.send(pub_filter, ZMQ_SNDMORE));
+    while(!d_socket.send(zmsg));
 #endif
+}
+void pub_msg_sink_impl::teardown()
+{
+    if (d_terminated == 0){
+        d_context.shutdown();
+        d_socket.close();
+        d_context.close();
+        d_terminated = 1;
+    }
 }
 
 } /* namespace zeromq */

@@ -15,6 +15,7 @@
 #include "hier_block2_detail.h"
 #include <gnuradio/flowgraph.h>
 #include <gnuradio/hier_block2.h>
+#include <gnuradio/block_registry.h>
 #include <gnuradio/io_signature.h>
 #include <memory>
 
@@ -46,7 +47,7 @@ hier_block2::hier_block2(const std::string& name,
 
 hier_block2::~hier_block2()
 {
-    disconnect_all();
+    d_detail->cleanup_all("");
     gnuradio::detail::sptr_magic::cancel_initial_sptr(this);
 }
 

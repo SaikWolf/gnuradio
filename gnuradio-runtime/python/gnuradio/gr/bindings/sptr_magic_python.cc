@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sptr_magic.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(79deab244963f18ba5e14b48a482f967)                     */
+/* BINDTOOL_HEADER_FILE_HASH(98c1c6e6feaac8ee4257d26ace102963)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -25,4 +25,11 @@ namespace py = pybind11;
 
 #include <gnuradio/sptr_magic.h>
 
-void bind_sptr_magic(py::module& m) {}
+void bind_sptr_magic(py::module& m) {
+
+    m.def("print_sptr_magic_ownership",
+          &::gnuradio::detail::sptr_magic::print_ownership
+        );
+
+
+}

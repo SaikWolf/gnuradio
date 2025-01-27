@@ -42,6 +42,7 @@ public:
     void disconnect(basic_block_sptr block);
     void disconnect(basic_block_sptr, int src_port, basic_block_sptr, int dst_port);
     void disconnect_all();
+    void cleanup_all(std::string caller);
     void lock();
     void unlock();
     void flatten_aux(flat_flowgraph_sptr sfg) const;

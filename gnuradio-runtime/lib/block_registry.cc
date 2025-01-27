@@ -129,4 +129,27 @@ void block_registry::notify_blk(std::string blk)
     }
 }
 
+void block_registry::print_ownership(int item){
+    if (item == 1){
+        std::cout << "Hey Printing all of the block pairs being tracked now in registry: " << primitive_map.size() << "\n";
+        gr::thread::scoped_lock guard(d_mutex);
+        for(auto const& pair : primitive_map){
+            std::cout << pair.first << " : " << pair.second << std::endl;
+        }
+    } else {
+        std::cout << "Hey Printing all of the block pairs being tracked now in registry: " << d_map.size() << "\n";
+        gr::thread::scoped_lock guard(d_mutex);
+        for(auto const& pair : d_map){
+            std::cout << pair.first << " ::\n";
+            for(auto const& sub : pair.second){
+                std::cout << "\t" << sub.first << " : " << sub.second << std::endl;
+            }
+        }
+    }
+}
+
 } /* namespace gr */
+
+void print_global_ownership(int item){
+    global_block_registry.print_ownership(item);
+}

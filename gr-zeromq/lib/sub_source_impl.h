@@ -28,6 +28,7 @@ public:
                     bool pass_tags,
                     int hwm,
                     const std::string& key,
+                    int linger, 
                     bool bind);
 
     int work(int noutput_items,

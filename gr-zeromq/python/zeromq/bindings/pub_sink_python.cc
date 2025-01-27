@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pub_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(0dc6073a224da6f95df9c04a2a507de3)                     */
+/* BINDTOOL_HEADER_FILE_HASH(9d3bb1d7638e40c79ed8772941a0bd0b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -48,6 +48,7 @@ void bind_pub_sink(py::module& m)
              py::arg("hwm") = -1,
              py::arg("key") = "",
              py::arg("drop_on_hwm") = true,
+             py::arg("linger") = 0,
              py::arg("bind") = true,
              D(pub_sink, make))
 

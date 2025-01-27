@@ -15,6 +15,7 @@ list(APPEND zeromq_python_files
     rep_sink_python.cc
     req_msg_source_python.cc
     req_source_python.cc
+    router_msg_sink_python.cc
     sub_msg_source_python.cc
     sub_source_python.cc
     python_bindings.cc)

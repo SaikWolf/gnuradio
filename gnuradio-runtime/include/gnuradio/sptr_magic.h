@@ -32,6 +32,7 @@ public:
     static std::shared_ptr<gr::basic_block> fetch_initial_sptr(gr::basic_block* p);
     static void create_and_stash_initial_sptr(gr::hier_block2* p);
     static void cancel_initial_sptr(gr::hier_block2* p);
+    static void print_ownership();
 };
 } // namespace detail
 

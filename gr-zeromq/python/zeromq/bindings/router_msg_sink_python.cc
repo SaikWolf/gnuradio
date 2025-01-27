@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(req_msg_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(30d62ce8ec8514db301eae06bc4b8661)                     */
+/* BINDTOOL_HEADER_FILE(router_msg_sink.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(67aeb7818de8c967aacaaec7f983f769)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,36 +23,32 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/zeromq/req_msg_source.h>
+#include <gnuradio/zeromq/router_msg_sink.h>
 // pydoc.h is automatically generated in the build directory
-#include <req_msg_source_pydoc.h>
+#include <router_msg_sink_pydoc.h>
 
-void bind_req_msg_source(py::module& m)
+void bind_router_msg_sink(py::module& m)
 {
 
-    using req_msg_source = ::gr::zeromq::req_msg_source;
+    using router_msg_sink = ::gr::zeromq::router_msg_sink;
 
 
-    py::class_<req_msg_source,
-               gr::block,
-               gr::basic_block,
-               std::shared_ptr<req_msg_source>>(m, "req_msg_source", D(req_msg_source))
+    py::class_<router_msg_sink, gr::block, gr::basic_block, std::shared_ptr<router_msg_sink>>(
+        m, "router_msg_sink", D(router_msg_sink))
 
-        .def(py::init(&req_msg_source::make),
+        .def(py::init(&router_msg_sink::make),
              py::arg("address"),
              py::arg("timeout") = 100,
              py::arg("linger") = 0,
-             py::arg("bind") = false,
-             D(req_msg_source, make))
+             py::arg("bind") = true,
+             D(router_msg_sink, make))
 
 
-        .def("last_endpoint",
-             &req_msg_source::last_endpoint,
-             D(req_msg_source, last_endpoint))
+        .def(
+            "last_endpoint", &router_msg_sink::last_endpoint, D(router_msg_sink, last_endpoint))
 
-        .def("teardown",
-             &req_msg_source::teardown,
-             D(req_msg_source, teardown))
+        .def(
+            "teardown", &router_msg_sink::teardown, D(router_msg_sink, teardown))
 
         ;
 }

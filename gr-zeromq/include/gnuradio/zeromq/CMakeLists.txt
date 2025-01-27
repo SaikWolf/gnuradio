@@ -22,6 +22,7 @@ install(FILES
   rep_msg_sink.h
   req_source.h
   req_msg_source.h
+  router_msg_sink.h
 
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/zeromq
 )

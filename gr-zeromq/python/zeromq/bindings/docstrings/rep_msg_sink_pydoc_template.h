@@ -28,3 +28,6 @@ static const char* __doc_gr_zeromq_rep_msg_sink_make = R"doc()doc";
 
 
 static const char* __doc_gr_zeromq_rep_msg_sink_last_endpoint = R"doc()doc";
+
+
+static const char* __doc_gr_zeromq_rep_msg_sink_teardown = R"doc()doc";

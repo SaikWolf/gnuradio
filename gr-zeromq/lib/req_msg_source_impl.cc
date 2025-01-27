@@ -22,19 +22,20 @@
 namespace gr {
 namespace zeromq {
 
-req_msg_source::sptr req_msg_source::make(char* address, int timeout, bool bind)
+req_msg_source::sptr req_msg_source::make(char* address, int timeout, int linger, bool bind)
 {
-    return gnuradio::make_block_sptr<req_msg_source_impl>(address, timeout, bind);
+    return gnuradio::make_block_sptr<req_msg_source_impl>(address, timeout, linger, bind);
 }
 
-req_msg_source_impl::req_msg_source_impl(char* address, int timeout, bool bind)
+req_msg_source_impl::req_msg_source_impl(char* address, int timeout, int linger, bool bind)
     : gr::block("req_msg_source",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_timeout(timeout),
       d_context(1),
       d_socket(d_context, ZMQ_REQ),
-      d_port(pmt::mp("out"))
+      d_port(pmt::mp("out")),
+      d_terminated(0)
 {
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
@@ -43,7 +44,7 @@ req_msg_source_impl::req_msg_source_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    int time = 0;
+    int time = linger;
 #if USE_NEW_CPPZMQ_SET_GET
     d_socket.set(zmq::sockopt::linger, time);
 #else
@@ -61,13 +62,12 @@ req_msg_source_impl::req_msg_source_impl(char* address, int timeout, bool bind)
 
 req_msg_source_impl::~req_msg_source_impl()
 {
-    d_context.shutdown();
-    d_socket.close();
-    d_context.close();
+    teardown();
 }
 
 bool req_msg_source_impl::start()
 {
+    if (d_terminated == 1) return true;
     d_finished = false;
     d_thread = std::make_unique<std::thread>([this] { readloop(); });
     return true;
@@ -75,8 +75,11 @@ bool req_msg_source_impl::start()
 
 bool req_msg_source_impl::stop()
 {
+    if (d_terminated == 1) return true;
     d_finished = true;
-    d_thread->join();
+    if (d_thread)
+        if (d_thread->joinable())
+            d_thread->join();
     return true;
 }
 
@@ -136,9 +139,17 @@ void req_msg_source_impl::readloop()
             std::this_thread::sleep_for(100us);
         }
     }
-    d_context.shutdown();
-    d_socket.close();
-    d_context.close();
+}
+
+void req_msg_source_impl::teardown()
+{
+    if(d_terminated == 0){
+        stop();
+        d_context.shutdown();
+        d_socket.close();
+        d_context.close();
+        d_terminated = 1;
+    }
 }
 
 } /* namespace zeromq */

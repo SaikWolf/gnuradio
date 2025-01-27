@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_ZEROMQ_PULL_MSG_SOURCE_H
-#define INCLUDED_ZEROMQ_PULL_MSG_SOURCE_H
+#ifndef INCLUDED_ZEROMQ_ROUTER_MSG_SINK_H
+#define INCLUDED_ZEROMQ_ROUTER_MSG_SINK_H
 
 #include <gnuradio/block.h>
 #include <gnuradio/zeromq/api.h>
@@ -18,29 +18,31 @@ namespace gr {
 namespace zeromq {
 
 /*!
- * \brief Receive messages on ZMQ PULL socket and output async messages
+ * \brief Sink the contents of a msg port to a ZMQ ROUTER socket
  * \ingroup zeromq
  *
  * \details
- * This block will connect to a ZMQ PUSH socket, then convert
- * received messages to outgoing async messages.
+ * This block acts a message port receiver and writes individual
+ * messages to a ZMQ ROUTER socket.  The corresponding receiving ZMQ
+ * REQ socket can be either another gr-zeromq source block or a
+ * non-GNU Radio ZMQ socket.
  */
-class ZEROMQ_API pull_msg_source : virtual public gr::block
+class ZEROMQ_API router_msg_sink : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<pull_msg_source> sptr;
+    typedef std::shared_ptr<router_msg_sink> sptr;
 
     /*!
-     * \brief Return a shared_ptr to a new instance of gr::zeromq::pull_msg_source.
+     * \brief Return a shared_ptr to a new instance of zeromq::router_msg_sink.
      *
      * \param address  ZMQ socket address specifier
      * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments
      * \param linger How long should the socket keep open after close if messages available.
      * \param bind     If true this block will bind to the address, otherwise it will
-     * connect; the default is to connect
+     * connect; the default is to bind
      *
      */
-    static sptr make(char* address, int timeout = 100, int linger = 0, bool bind = false);
+    static sptr make(char* address, int timeout = 100, int linger = 0, bool bind = true);
 
     /*!
      * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.
@@ -56,4 +58,4 @@ public:
 } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_PULL_MSG_SOURCE_H */
+#endif /* INCLUDED_ZEROMQ_ROUTER_MSG_SINK_H */

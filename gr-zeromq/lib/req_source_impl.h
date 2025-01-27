@@ -27,6 +27,7 @@ public:
                     int timeout,
                     bool pass_tags,
                     int hwm,
+                    int linger,
                     bool bind);
 
     int work(int noutput_items,

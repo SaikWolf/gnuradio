@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pull_msg_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e0c802fdfcde5a5fb45b4b2c42c894a8)                     */
+/* BINDTOOL_HEADER_FILE_HASH(218998e4f3c50488d9b57bbde1f8ed54)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -41,6 +41,7 @@ void bind_pull_msg_source(py::module& m)
         .def(py::init(&pull_msg_source::make),
              py::arg("address"),
              py::arg("timeout") = 100,
+             py::arg("linger") = 0,
              py::arg("bind") = false,
              D(pull_msg_source, make))
 
@@ -48,6 +49,10 @@ void bind_pull_msg_source(py::module& m)
         .def("last_endpoint",
              &pull_msg_source::last_endpoint,
              D(pull_msg_source, last_endpoint))
+
+        .def("teardown",
+             &pull_msg_source::teardown,
+             D(pull_msg_source, teardown))
 
         ;
 }
