@@ -213,11 +213,6 @@ public:
     void clear();
 
     /*!
-     * \brief Clear existing flowgraph msg edges
-     */
-    void clear_msg();
-
-    /*!
      * \brief Get vector of edges
      */
     const edge_vector_t& edges() const { return d_edges; }

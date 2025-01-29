@@ -502,7 +502,7 @@ void hier_block2_detail::recursive_disconnect_all(hier_block2* caller)
         d_debug_logger->debug("Disconnect hier_block2 recursive...");
         for (auto& path : d_fg->partition()) {
             for (auto block_pointer : path) {
-                auto hier_ptr = std::dynamic_pointer_cast<hier_block2>((*block_pointer));
+                auto hier_ptr = std::dynamic_pointer_cast<hier_block2>((block_pointer));
                 if(hier_ptr) hier_ptr->disconnect_all();
             }
         }
@@ -516,7 +516,6 @@ void hier_block2_detail::disconnect_all()
     recursive_disconnect_all(this->d_owner);
     reset_hier_blocks_parent();
     d_fg->clear();
-    d_fg->clear_msg();
     d_blocks.clear();
 
     int max_inputs = d_owner->input_signature()->max_streams();
