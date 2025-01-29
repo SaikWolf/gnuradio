@@ -515,7 +515,7 @@ void hier_block2_detail::disconnect_all()
     recursive_disconnect_all(this->d_owner);
     reset_hier_blocks_parent();
     d_fg->clear();
-    d_fg->msg_clear();
+    d_fg->clear_msg();
     d_blocks.clear();
 
     int max_inputs = d_owner->input_signature()->max_streams();
