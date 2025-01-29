@@ -47,7 +47,6 @@ hier_block2::hier_block2(const std::string& name,
 
 hier_block2::~hier_block2()
 {
-    d_detail->cleanup_all("");
     gnuradio::detail::sptr_magic::cancel_initial_sptr(this);
 }
 
