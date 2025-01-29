@@ -83,6 +83,7 @@ private:
     void set_parent(hier_block2* parent);
     void reset_parent(bool force = false);
     void reset_hier_blocks_parent();
+    void recursive_disconnect_all(hier_block2* caller);
 };
 
 } /* namespace gr */
