@@ -41,6 +41,7 @@ public:
                         pmt::pmt_t dstport);
     void disconnect(basic_block_sptr block);
     void disconnect(basic_block_sptr, int src_port, basic_block_sptr, int dst_port);
+    void recursive_disconnect_all(hier_block2* caller);
     void disconnect_all();
     void lock();
     void unlock();
@@ -82,7 +83,6 @@ private:
     void set_parent(hier_block2* parent);
     void reset_parent(bool force = false);
     void reset_hier_blocks_parent();
-    void recursive_disconnect_all(hier_block2* caller);
 };
 
 } /* namespace gr */
