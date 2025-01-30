@@ -160,7 +160,7 @@ class hier_block2(object):
         Register a message port for this hier block
         """
         self.primitive_message_port_register_hier_in(
-            portname if pmt.is_symbol(portname) else pmt.intern(portname)
+            pmt.intern(portname) if isinstance(portname,str) else portname
         )
 
     def message_port_register_hier_out(self, portname):
@@ -168,7 +168,7 @@ class hier_block2(object):
         Register a message port for this hier block
         """
         self.primitive_message_port_register_hier_out(
-            portname if pmt.is_symbol(portname) else pmt.intern(portname)
+            pmt.intern(portname) if isinstance(portname,str) else portname
         )
 
     # def dot_graph(self):
