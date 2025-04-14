@@ -102,6 +102,7 @@ void flowgraph::clear()
     d_blocks.clear();
     d_msg_edges.clear();
     d_edges.clear();
+    d_msg_edges.clear();
 }
 
 void flowgraph::check_valid_port(gr::io_signature::sptr sig, int port)

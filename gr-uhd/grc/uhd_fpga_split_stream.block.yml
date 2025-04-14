@@ -4,9 +4,8 @@ label: RFNoC Split Stream
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'block'
-    options: ['block', 'sep', 'device']
     hide: all
 -   id: desc
     label: Block Descriptor
@@ -25,9 +24,6 @@ parameters:
     hide: part
 
 inputs:
--   domain: rfnoc.clk
-    id: ce_clk
-    dtype: message
 -   domain: rfnoc.data
     id: in_
     dtype: fc32

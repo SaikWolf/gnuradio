@@ -168,32 +168,44 @@ void block_detail::add_item_tag(unsigned int which_output, const tag_t& tag)
     if (!pmt::is_symbol(tag.key)) {
         throw pmt::wrong_type("block_detail::add_item_tag key", tag.key);
     } else {
-        // add tag to gr_buffer_reader's (multi) map of tags
+        // Add tag to gr_buffer's deque tags
         d_output[which_output]->add_item_tag(tag);
+    }
+}
+
+void block_detail::remove_item_tag(unsigned int which_input, const tag_t& tag, long id)
+{
+    if (!pmt::is_symbol(tag.key)) {
+        throw pmt::wrong_type("block_detail::add_item_tag key", tag.key);
+    } else {
+        // Add tag to gr_buffer's deque tags
+        d_input[which_input]->buffer()->remove_item_tag(tag, id);
     }
 }
 
 void block_detail::get_tags_in_range(std::vector<tag_t>& v,
                                      unsigned int which_input,
                                      uint64_t abs_start,
-                                     uint64_t abs_end)
+                                     uint64_t abs_end,
+                                     long id)
 {
-    // get from gr_buffer_reader's (multi) map of tags
-    d_input[which_input]->get_tags_in_range(v, abs_start, abs_end);
+    // get from gr_buffer_reader's deque of tags
+    d_input[which_input]->get_tags_in_range(v, abs_start, abs_end, id);
 }
 
 void block_detail::get_tags_in_range(std::vector<tag_t>& v,
                                      unsigned int which_input,
                                      uint64_t abs_start,
                                      uint64_t abs_end,
-                                     const pmt::pmt_t& key)
+                                     const pmt::pmt_t& key,
+                                     long id)
 {
     std::vector<tag_t> found_items;
 
     v.resize(0);
 
-    // get from gr_buffer_reader's (multi) map of tags
-    d_input[which_input]->get_tags_in_range(found_items, abs_start, abs_end);
+    // get from gr_buffer_reader's deque of tags
+    d_input[which_input]->get_tags_in_range(found_items, abs_start, abs_end, id);
 
     // Filter further by key name
     pmt::pmt_t itemkey;
@@ -205,14 +217,7 @@ void block_detail::get_tags_in_range(std::vector<tag_t>& v,
         }
     }
 }
-std::optional<gr::tag_t>
-block_detail::get_first_tag_in_range(unsigned which_input,
-                                     uint64_t start,
-                                     uint64_t end,
-                                     std::function<bool(const gr::tag_t&)> predicate)
-{
-    return d_input.at(which_input)->get_first_tag_in_range(start, end, predicate);
-}
+
 void block_detail::set_processor_affinity(const std::vector<int>& mask)
 {
     if (threaded) {
