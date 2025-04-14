@@ -513,7 +513,7 @@ void hier_block2_detail::recursive_disconnect_all(hier_block2* caller)
 void hier_block2_detail::disconnect_all()
 {
     d_debug_logger->debug("Disconnect all...");
-    recursive_disconnect_all(this->owner);
+    recursive_disconnect_all(this->d_owner);
     reset_hier_blocks_parent();
     d_fg->clear();
     d_blocks.clear();
